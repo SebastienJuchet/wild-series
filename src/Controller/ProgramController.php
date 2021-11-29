@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Program;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,7 +17,13 @@ class ProgramController extends AbstractController
     */
     public function index(): Response
     {
-        return $this->render('program/index.html.twig');
+        $programs = $this->getDoctrine()
+            ->getRepository(Program::class)
+            ->findAll();
+        dump($programs);
+        return $this->render('program/index.html.twig',[
+            'programs' => $programs,
+        ]);
     }
 
     /**
@@ -24,8 +31,15 @@ class ProgramController extends AbstractController
      */
     public function show(int $id)
     {
+        $program = $this->getDoctrine()
+            ->getRepository(Program::class)
+            ->findOneBy(['id' => $id]);
+
+        if (!$program) {
+            throw $this->createNotFoundException('Le program avec l\'id: ' . $id . 'n\'existe pas!');
+        }
         return $this->render('program/show.html.twig', [
-            'id' => $id,
+            'program' => $program,
         ]);
     }
 }
