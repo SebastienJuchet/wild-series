@@ -42,7 +42,7 @@ class CategoryController extends AbstractController
         $programs = $this->getDoctrine()
             ->getRepository(Program::class)
             ->findByCategory($category->getId(), ['id' => 'DESC'], 3);
-
+        dump($programs);
         return $this->render('category/show.html.twig', [
             'category' => $category,
             'programs' => $programs,
