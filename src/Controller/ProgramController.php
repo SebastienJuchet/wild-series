@@ -7,6 +7,7 @@ use App\Entity\Program;
 use App\Entity\Season;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,16 +31,14 @@ class ProgramController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/", name="show", methods="GET", requirements={"id"="\d{1,}"})
+     * @Route("/{program}/", name="show", methods="GET", requirements={"id"="\d{1,}"})
      */
-    public function show(int $id, EntityManagerInterface $em): Response
+    public function show(Program $program, ManagerRegistry $doctrine): Response
     {
-        $program = $em->getRepository(Program::class)
-            ->findOneBy(['id' => $id], null, 3);
-        $seasons = $em->getRepository(Season::class)->findBy(['program' => $id]);
+        $seasons = $doctrine->getRepository(Season::class)->findByProgram($program);
 
         if (!$program) {
-            throw $this->createNotFoundException('Le program avec l\'id: ' . $id . 'n\'existe pas!');
+            throw $this->createNotFoundException('Le program avec l\'id: ' . $program->getTitle() . 'n\'existe pas!');
         }
         return $this->render('program/show.html.twig', [
             'program' => $program,
@@ -48,18 +47,29 @@ class ProgramController extends AbstractController
     }
 
     /**
-     * @Route("/{programId}/season/{seasonId}/", name="season_show")
+     * @Route("/{program}/season/{season}/", name="season_show")
      */
-    public function showSeason(int $programId, int $seasonId, EntityManagerInterface $em)
+    public function showSeason(Program $program, Season $season, ManagerRegistry $doctrine)
     {
-        $program = $em->getRepository(Program::class)->findOneById($programId);
-        $season = $em->getRepository(Season::class)->findOneById($seasonId);
-        $episodes = $em->getRepository(Episode::class)->findBy(['season' => $seasonId]);
+        $episodes = $doctrine->getRepository(Episode::class)->findBySeason($season);
 
         return $this->render('program/season_show.html.twig', [
             'program' => $program,
             'season' => $season,
             'episodes' => $episodes,
+        ]);
+    }
+
+    /**
+     * @Route("/{program}/season/{season}/episode/{episode}", name="episode_show")
+     */
+    public function showEpisodes(Program $program, Season $season, Episode $episode, ManagerRegistry $doctrine)
+    {
+
+        return $this->render('program/episode_show.html.twig', [
+            'program' => $program,
+            'season' => $season,
+            'episode' => $episode,
         ]);
     }
 }

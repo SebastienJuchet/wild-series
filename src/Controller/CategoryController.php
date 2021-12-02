@@ -28,20 +28,16 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/show/{categoryName}", name="show")
+     * @Route("/show/{category}", name="show")
      */
-    public function show(string $categoryName): Response
+    public function show(Category $category): Response
     {
-        $category = $this->getDoctrine()
-            ->getRepository(Category::class)
-            ->findOneByName($categoryName);
-
         if (!$category) {
-            throw $this->createNotFoundException('Le nom de catégorie ' . $categoryName . 'n\'existe pas');
+            throw $this->createNotFoundException('Le nom de catégorie ' . $category . 'n\'existe pas');
         }
         $programs = $this->getDoctrine()
             ->getRepository(Program::class)
-            ->findByCategory($category->getId(), ['id' => 'DESC'], 3);
+            ->findByCategory($category, ['id' => 'DESC'], 3);
         dump($programs);
         return $this->render('category/show.html.twig', [
             'category' => $category,
