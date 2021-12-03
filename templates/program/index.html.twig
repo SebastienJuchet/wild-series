@@ -1,20 +1,25 @@
 {% extends 'base.html.twig' %}
 {% block title 'All programs' %}
 {% block body %}
-    <div class="container text-center">
+    <div class="container text-center mt-5">
         <h1>Toutes les séries de la table program</h1>
-        {% for program in programs %}
-            <div class="card col-3 p-4">
-                <img src="{{ program.poster }}" class="card-img-top" alt="...">
-                <div class="card-body border-1">
-                    <h5 class="card-title">{{ program.title }}</h5>
-                    <p class="card-text">Catégorie: {{ program.category.name }}</p>
-                    <p class="card-text">program.summary</p>
-                    <a href="{{ path("program_show", {program: program.id}) }}">Voir la fiche</a>
+        <p><a href="{{ path("program_new") }}">Ajouter une nouvelle série</a></p>
+        <div class="row">
+            {% for program in programs %}
+                <div class="card col-3 p-4 mx-2">
+                    {% if  program.poster %}
+                        <img src="{{ program.poster }}" class="card-img-top" alt="...">
+                    {% endif %}
+                    <div class="card-body border-1">
+                        <h5 class="card-title">{{ program.title }}</h5>
+                        <p class="card-text">Catégorie: {{ program.category.name }}</p>
+                        <p class="card-text">program.summary</p>
+                        <a href="{{ path("program_show", {program: program.id}) }}">Voir la fiche</a>
+                    </div>
                 </div>
-            </div>
-        {% else %}
-            Aucune série trouvée.
-        {% endfor %}
+            {% else %}
+                Aucune série trouvée.
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
