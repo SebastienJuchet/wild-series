@@ -5,10 +5,16 @@ namespace App\Entity;
 use App\Repository\ProgramRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ProgramRepository::class)
+ * @UniqueEntity(
+ *     fields={"title"},
+ *     message="La série {{ value }} existe déjà"
+ * )
  */
 class Program
 {
@@ -21,11 +27,16 @@ class Program
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(max="255")
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(message="Le champs ne doit pas être vide")
+     * @Assert\Regex(
+     *     pattern="/plus\sbelle\sla\svie\gi/",
+     *     message="On parle de vraies séries ici")
      */
     private $summary;
 
