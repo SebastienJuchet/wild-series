@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center">{{ actor.name }}</h1>
+    <p class="text-center mt-3">Liste des séries</p>
+    <div class="list-group col-4 mx-auto mt-5">
+        {% for program in actor.programs %}
+            <a class="list-group-item" href="{{ path("program_show", {program: program.id}) }}">{{ program.title }}</a>
+        {% else %}
+            <p>Aucune série enregistrée</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
