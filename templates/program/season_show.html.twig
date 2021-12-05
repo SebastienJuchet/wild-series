@@ -3,6 +3,7 @@
     <div class="container text-center">
         <h1>{{ program.title }}</h1>
         <h2 class="text-center">{{ season.description }}</h2>
+        <h3 class="my-3">Saison n° {{ season.number }}</h3>
         <ul class="list-group">
             {% for episode in episodes %}
                 <li class="list-group-item text-start">

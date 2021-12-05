@@ -12,7 +12,7 @@
         <div class="list-group col-3 mx-auto mb-5">
             <h3 class="text-center my-3">Liste des saisons</h3>
             {% for season in seasons %}
-                <a href="{{ path("program_season_show", {program: program.id, season: season.number}) }}" class="list-group-item list-group-item-action">{{ season.description }}</a>
+                <a href="{{ path("program_season_show", {program: program.id, season: season.id}) }}" class="list-group-item list-group-item-action">Saison n°{{ season.number }}</a>
             {% endfor %}
         </div>
         <div class="list-group col-3 mx-auto mb-5">
