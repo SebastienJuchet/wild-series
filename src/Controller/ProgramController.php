@@ -13,6 +13,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -36,7 +38,7 @@ class ProgramController extends AbstractController
     /**
      * @Route("/new/", name="new")
      */
-    public function new(Request $request, ManagerRegistry $doctrine, Slugify $slugify): Response
+    public function new(Request $request, ManagerRegistry $doctrine, Slugify $slugify, MailerInterface $mailer): Response
     {
         $program = new Program();
         $entityManager = $doctrine->getManager();
@@ -48,7 +50,12 @@ class ProgramController extends AbstractController
             $program = $form->getData();
             $entityManager->persist($program);
             $entityManager->flush();
-
+            $email = (new Email())
+                ->from($this->getParameter('mailer_from'))
+                ->to('sebastien.juchet@gmail.com')
+                ->subject('Nouvelle série')
+                ->html($this->renderView('email/newProgramEmail.html.twig', ['program' => $program]));
+            $mailer->send($email);
             return $this->redirectToRoute('program_index');
         }
 
@@ -60,9 +67,9 @@ class ProgramController extends AbstractController
     /**
      * @Route("/{slug}/", name="show", methods="GET")
      */
-    public function show(Program $program, ManagerRegistry $doctrine): Response
+    public function show(Program $program): Response
     {
-        $seasons = $doctrine->getRepository(Season::class)->findByProgram($program);
+        $seasons = $program->getSeasons();
 
         if (!$program) {
             throw $this->createNotFoundException('Le program avec l\'id: ' . $program->getTitle() . 'n\'existe pas!');
@@ -90,9 +97,8 @@ class ProgramController extends AbstractController
     /**
      * @Route("/{program}/season/{season}/episode/{episode}", name="episode_show")
      */
-    public function showEpisodes(Program $program, Season $season, Episode $episode, ManagerRegistry $doctrine)
+    public function showEpisodes(Program $program, Season $season, Episode $episode)
     {
-
         return $this->render('program/episode_show.html.twig', [
             'program' => $program,
             'season' => $season,

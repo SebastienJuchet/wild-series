@@ -1,0 +1,7 @@
+{% extends 'email/layout.html.twig' %}
+{% block body %}
+    <h1 class="text-center">{{ episode.title|capitalize }} créer</h1>
+    <p>Salut le nouvel épisode {{ episode.title }} de la saison {{ episode.season.number }} de la série {{ episode.season.program.title }} vient d'être créée</p>
+    <p>Description:</p>
+    <p>{{ episode.synopsis }}</p>
+{% endblock %}

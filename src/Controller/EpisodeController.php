@@ -10,6 +10,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -30,7 +32,7 @@ class EpisodeController extends AbstractController
     /**
      * @Route("/new", name="episode_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager, Slugify $slugify): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, Slugify $slugify, MailerInterface $mailer): Response
     {
         $episode = new Episode();
         $form = $this->createForm(EpisodeType::class, $episode);
@@ -40,10 +42,13 @@ class EpisodeController extends AbstractController
             $slug = $slugify->generate($episode->getTitle());
             $episode->setSlug($slug);
             $episode = $form->getData();
-            dd($episode);
             $entityManager->persist($episode);
             $entityManager->flush();
-
+            $mail = (new Email())
+                ->from($this->getParameter('mailer_from'))
+                ->to('sebastien.juchet@gmail.com')
+                ->html($this->renderView('email/newEpisodeEmail.html.twig', ['episode' => $episode]));
+            $mailer->send($mail);
             return $this->redirectToRoute('episode_index', [], Response::HTTP_SEE_OTHER);
         }
 
