@@ -6,6 +6,7 @@ use App\Entity\Episode;
 use App\Entity\Program;
 use App\Entity\Season;
 use App\Form\ProgramType;
+use App\Service\Slugify;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -35,13 +36,15 @@ class ProgramController extends AbstractController
     /**
      * @Route("/new/", name="new")
      */
-    public function new(Request $request, ManagerRegistry $doctrine): Response
+    public function new(Request $request, ManagerRegistry $doctrine, Slugify $slugify): Response
     {
         $program = new Program();
         $entityManager = $doctrine->getManager();
         $form = $this->createForm(ProgramType::class, $program);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $slug = $slugify->generate($program->getTitle());
+            $program->setSlug($slug);
             $program = $form->getData();
             $entityManager->persist($program);
             $entityManager->flush();
@@ -55,7 +58,7 @@ class ProgramController extends AbstractController
     }
 
     /**
-     * @Route("/{program}/", name="show", methods="GET", requirements={"id"="\d{1,}"})
+     * @Route("/{slug}/", name="show", methods="GET")
      */
     public function show(Program $program, ManagerRegistry $doctrine): Response
     {
@@ -71,7 +74,7 @@ class ProgramController extends AbstractController
     }
 
     /**
-     * @Route("/{program}/season/{season}/", name="season_show")
+     * @Route("/{slug}/season/{seasonNumber}/", name="season_show")
      */
     public function showSeason(Program $program, Season $season, ManagerRegistry $doctrine)
     {

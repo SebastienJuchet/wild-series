@@ -3,12 +3,19 @@
 namespace App\DataFixtures;
 
 use App\Entity\Program;
+use App\Service\Slugify;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
 class ProgramFixtures extends Fixture implements DependentFixtureInterface
 {
+    public $slugify;
+    public function __construct(Slugify $slugify)
+    {
+        $this->slugify = $slugify;
+    }
+
     public function load(ObjectManager $manager): void
     {
         $cat = $this->getReference('Category_4');
@@ -18,6 +25,7 @@ class ProgramFixtures extends Fixture implements DependentFixtureInterface
         for ($i=0; $i < count(ActorFixtures::ACTORS); $i++) {
             $program->addActor($this->getReference('actor_' . $i));
         }
+        $program->setSlug($this->slugify->generate($program->getTitle()));
         $program->setSummary('Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium 
         doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae 
         vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia 
@@ -35,6 +43,8 @@ class ProgramFixtures extends Fixture implements DependentFixtureInterface
         for ($i=0; $i < count(ActorFixtures::ACTORS); $i++) {
             $program2->addActor($this->getReference('actor_' . $i));
         }
+        $program2->setSlug($this->slugify->generate($program2->getTitle()));
+
         $program2->setSummary('Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?');
         $this->addReference('program_2', $program2);
         $manager->persist($program2);
@@ -45,6 +55,7 @@ class ProgramFixtures extends Fixture implements DependentFixtureInterface
         for ($i=0; $i < count(ActorFixtures::ACTORS); $i++) {
             $program3->addActor($this->getReference('actor_' . $i));
         }
+        $program3->setSlug($this->slugify->generate($program3->getTitle()));
         $program3->setSummary('Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?');
         $this->addReference('program_3', $program3);
         $manager->persist($program3);
@@ -55,6 +66,7 @@ class ProgramFixtures extends Fixture implements DependentFixtureInterface
         for ($i=0; $i < count(ActorFixtures::ACTORS); $i++) {
             $program4->addActor($this->getReference('actor_' . $i));
         }
+        $program4->setSlug($this->slugify->generate($program4->getTitle()));
         $program4->setSummary('Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?');
         $this->addReference('program_4', $program4);
         $manager->persist($program4);
@@ -65,6 +77,7 @@ class ProgramFixtures extends Fixture implements DependentFixtureInterface
         for ($i=0; $i < count(ActorFixtures::ACTORS); $i++) {
             $program5->addActor($this->getReference('actor_' . $i));
         }
+        $program5->setSlug($this->slugify->generate($program5->getTitle()));
         $program5->setSummary('Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?');
         $this->addReference('program_5', $program5);
         $manager->persist($program5);
