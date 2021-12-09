@@ -5,5 +5,26 @@
         <h2 class="text-center">{{ season.description }}</h2>
         <h3 class="text-center border">{{ episode.title }}</h3>
         <p>{{ episode.synopsis }}</p>
+        <ul class="list-group">
+            {% for comment in episode.comments %}
+                <li class="list-group-item">
+                    <div class="row">
+                        <span class="col-8">{{ comment.comment }}</span>
+                        <span class="col-3">Le commentaire a été poster par: {{ comment.autor.email }}</span>
+                        {% if app.user %}
+                            {% if app.user.email == comment.autor.email or is_granted('ROLE_ADMIN') %}
+                            <span class="col-1 text-end"><a href="{{ path('program_comment_delete', {slug: program.slug, seasonNumber: season.number, episode: episode.id, comment: comment.id}) }}"><i class="fas fa-trash-alt"></i></a></span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        {% if app.user %}
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <button class="btn btn-primary">Poster votre commentaire</button>
+            {{ form_end(form) }}
+        {% endif %}
     </div>
 {% endblock %}

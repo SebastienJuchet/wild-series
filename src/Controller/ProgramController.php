@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Episode;
 use App\Entity\Program;
 use App\Entity\Season;
+use App\Form\CommentType;
 use App\Form\ProgramType;
 use App\Service\Slugify;
 use Doctrine\ORM\EntityManager;
@@ -95,15 +97,42 @@ class ProgramController extends AbstractController
     }
 
     /**
-     * @Route("/{program}/season/{season}/episode/{episode}", name="episode_show")
+     * @Route("/{slug}/season/{seasonNumber}/episode/{episode}", name="episode_show")
      */
-    public function showEpisodes(Program $program, Season $season, Episode $episode)
+    public function showEpisodes(Program $program, Season $season, Episode $episode, Request $request, ManagerRegistry $doctrine): Response
     {
-        return $this->render('program/episode_show.html.twig', [
+        $entityManager = $doctrine->getManager();
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment = $form->getData();
+            $comment->setAutor($this->getUser());
+            $comment->setEpisode($episode);
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_index');
+        }
+
+        return $this->renderForm('program/episode_show.html.twig', [
             'program' => $program,
             'season' => $season,
             'episode' => $episode,
+            'form' => $form,
         ]);
     }
 
+    /**
+     * @Route("/{slug}/season/{seasonNumber}/episode/{episode}/comment/{comment}", name="comment_delete")
+     */
+    public function delete(Program $program, Season $season, Episode $episode, Comment $comment, ManagerRegistry $doctrine, Request $request): Response
+    {
+        $entityManager = $doctrine->getManager();
+        $entityManager->remove($comment);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_index');
+    }
 }

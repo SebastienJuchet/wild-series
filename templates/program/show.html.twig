@@ -18,7 +18,7 @@
         <div class="list-group col-3 mx-auto mb-5">
             <h3 class="text-center my-3">Liste des acteurs</h3>
             {% for actor in program.actors %}
-                <a href="{{ path("actor_show", {actor: actor.id}) }}" class="list-group-item list-group-item-action">{{ actor.name }}</a>
+                <a href="{{ path("actor_show", {slug: actor.slug}) }}" class="list-group-item list-group-item-action">{{ actor.name }}</a>
             {% endfor %}
         </div>
         <a href="{{ path('program_index') }}">

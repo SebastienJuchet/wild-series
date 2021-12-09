@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title 'Ajout d\'acteurs' %}
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center">Nouvel(le) Acteur(trice)</h1>
+        <div class="row col-4 mx-auto mt-5">
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <button class="btn btn-primary">Créer</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

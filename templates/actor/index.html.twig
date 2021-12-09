@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title 'Tous les acteurs' %}
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-center">Liste des acteurs</h1>
+        <ul class="list-group col-4 mx-auto mt-5">
+            {% for actor in actors %}
+                <p>
+                    <a class="list-group-item" href="{{ path('actor_show', {slug: actor.slug}) }}">{{ actor.name }}</a>
+                    <a href="{{ path('actor_delete', {actor: actor.id}) }}">Supprimer</a>
+                </p>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

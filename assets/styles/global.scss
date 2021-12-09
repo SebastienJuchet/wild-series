@@ -1,4 +1,4 @@
 $primary: darken(#23608d, 20%);
-
-// the ~ allows you to reference things in node_modules
-@import "~bootstrap/scss/bootstrap";
+.dropdown-menu[data-bs-popper] {
+  left: -100px;
+}

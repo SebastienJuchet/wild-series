@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Actor;
 use App\Entity\Program;
+use Doctrine\DBAL\Types\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,9 +15,9 @@ class ProgramType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title')
-            ->add('summary')
-            ->add('poster')
+            ->add('title', TextType::class, ['label' => 'Titre'])
+            ->add('summary', TextType::class, ['label' => 'Description'])
+            ->add('poster', TextType::class, ['label' => 'Image'])
             ->add('category', null, ['choice_label' => 'name'])
             ->add('actors', EntityType::class, [
                 'class' => Actor::class,
