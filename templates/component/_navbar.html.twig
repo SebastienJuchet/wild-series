@@ -13,9 +13,6 @@
                     <a class="nav-link" href="{{ path("program_index") }}">Séries</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path("category_index") }}">Catégories</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="{{ path("actor_index") }}">Acteurs</a>
                 </li>
                 <li class="nav-item dropdown">
@@ -36,9 +33,11 @@
                     </a>
                     <ul id="drop-modal" class="dropdown-menu" aria-labelledby="navbarDropdown">
                         {% if app.user %}
+                            <li><a class="dropdown-item" href="{{ path('show_profile') }}">Mon compte</a></li>
                             <li><a class="dropdown-item" href="{{ path('app_logout') }}">Déconnection</a></li>
                         {% else %}
-                            <li><a class="dropdown-item" href="{{ path('app_login') }}">Mon compte</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_login') }}">Me connecter</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_register') }}">Créer un compte</a></li>
                         {% endif %}
                     </ul>
                 </li>
