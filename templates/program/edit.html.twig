@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="container text-center">
+        <div class="col-4 mx-auto">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="btn btn-primary">Sauvegarder</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

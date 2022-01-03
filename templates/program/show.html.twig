@@ -21,8 +21,13 @@
                 <a href="{{ path("actor_show", {slug: actor.slug}) }}" class="list-group-item list-group-item-action">{{ actor.name }}</a>
             {% endfor %}
         </div>
-        <a href="{{ path('program_index') }}">
+        <a class="btn btn-primary" href="{{ path('program_index') }}">
             Retour à la liste des programmes
         </a>
+        {% if is_granted("ROLE_ADMIN") %}
+            <a class="btn btn-primary" href="{{ path('program_edit', {slug: program.slug}) }}">
+                Editer la série
+            </a>
+        {% endif %}
     </div>
 {% endblock %}

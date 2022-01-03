@@ -9,7 +9,6 @@ use App\Entity\Season;
 use App\Form\CommentType;
 use App\Form\ProgramType;
 use App\Service\Slugify;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/program", name="program_")
@@ -79,6 +79,30 @@ class ProgramController extends AbstractController
         return $this->render('program/show.html.twig', [
             'program' => $program,
             'seasons' => $seasons,
+        ]);
+    }
+
+    /**
+     * @Route("/{slug}/edit", name="edit", methods={"GET", "POST"})
+     */
+    public function edit(Program $program, Request $request, ManagerRegistry $doctrine): Response
+    {
+        if (!($this->getUser() == $program->getOwner())) {
+            throw new AccessDeniedException('Seul celui qui a ajouté cette série peut la modifiée');
+        }
+        $entityManager = $doctrine->getManager();
+        $form = $this->createForm(ProgramType::class, $program);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($program);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('program_index');
+        }
+
+        return $this->renderForm('program/edit.html.twig', [
+            'program' => $program,
+            'form' => $form,
         ]);
     }
 

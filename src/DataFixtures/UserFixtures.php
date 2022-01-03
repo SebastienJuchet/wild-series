@@ -20,12 +20,14 @@ class UserFixtures extends Fixture
         $user->setEmail('test@gmail.com');
         $user->setRoles(['ROLE_CONTRIBUTOR']);
         $user->setPassword($this->passhash->hashPassword($user,'azerty'));
+        $this->addReference('user', $user);
         $manager->persist($user);
 
         $userAdmin = new User();
         $userAdmin->setEmail('admin@gmail.com');
         $userAdmin->setRoles(['ROLE_ADMIN']);
         $userAdmin->setPassword($this->passhash->hashPassword($userAdmin, 'azerty'));
+        $this->addReference('admin', $userAdmin);
         $manager->persist($userAdmin);
 
         $manager->flush();

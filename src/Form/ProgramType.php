@@ -4,9 +4,10 @@ namespace App\Form;
 
 use App\Entity\Actor;
 use App\Entity\Program;
-use Doctrine\DBAL\Types\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,8 +17,14 @@ class ProgramType extends AbstractType
     {
         $builder
             ->add('title', TextType::class, ['label' => 'Titre'])
-            ->add('summary', TextType::class, ['label' => 'Description'])
-            ->add('poster', TextType::class, ['label' => 'Image'])
+            ->add('summary', TextareaType::class, ['label' => 'Description'])
+            ->add('poster',
+                TextType::class,
+                [
+                    'label' => 'Image',
+                    'required' => false,
+                ]
+            )
             ->add('category', null, ['choice_label' => 'name'])
             ->add('actors', EntityType::class, [
                 'class' => Actor::class,
