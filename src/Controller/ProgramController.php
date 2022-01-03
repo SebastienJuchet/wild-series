@@ -8,10 +8,12 @@ use App\Entity\Program;
 use App\Entity\Season;
 use App\Form\CommentType;
 use App\Form\ProgramType;
+use App\Repository\ProgramRepository;
 use App\Service\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -27,13 +29,18 @@ class ProgramController extends AbstractController
     /**
     * @Route("/", name="index")
     */
-    public function index(EntityManagerInterface $em): Response
+    public function index(ProgramRepository $programRepository, Request $request): Response
     {
-        $programs = $em->getRepository(Program::class)
-            ->findAll();
-
-        return $this->render('program/index.html.twig',[
+        $form = $this->createForm(SearchType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $programs = $programRepository->findLikeName($form->getData());
+        } else {
+            $programs = $programRepository->findAll();
+        }
+        return $this->renderForm('program/index.html.twig',[
             'programs' => $programs,
+            'form' => $form,
         ]);
     }
 

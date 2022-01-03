@@ -3,6 +3,12 @@
 {% block body %}
     <div class="container text-center mt-5">
         <h1>Toutes les séries de la table program</h1>
+        <div class="col-4 my-3 mx-auto">
+            {{ form_start(form, {'attr': {'class': 'd-flex'}}) }}
+            {{ form_widget(form) }}
+            <button class="btn btn-primary ms-2">Rechercher</button>
+            {{ form_end(form) }}
+        </div>
         <p><a href="{{ path("program_new") }}">Ajouter une nouvelle série</a></p>
         <div class="row">
             {% for program in programs %}
