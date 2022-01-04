@@ -56,6 +56,7 @@ class ProgramController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $slug = $slugify->generate($program->getTitle());
             $program->setSlug($slug);
+            $program->setOwner($this->getUser());
             $program = $form->getData();
             $entityManager->persist($program);
             $entityManager->flush();
@@ -65,12 +66,24 @@ class ProgramController extends AbstractController
                 ->subject('Nouvelle série')
                 ->html($this->renderView('email/newProgramEmail.html.twig', ['program' => $program]));
             $mailer->send($email);
+            $this->addFlash('success', 'La série a bien était créée');
             return $this->redirectToRoute('program_index');
         }
 
         return $this->renderForm('program/new.html.twig', [
             'form' => $form,
         ]);
+    }
+
+    /**
+     * @Route("/delete/{program}", name="delete")
+     */
+    public function deleteProgram(Program $program, ManagerRegistry $managerRegistry)
+    {
+        $managerRegistry->getManager()->remove($program);
+        $managerRegistry->getManager()->flush();
+        $this->addFlash('danger', 'La série a bien était supprimée');
+        return $this->redirectToRoute('program_index');
     }
 
     /**
@@ -103,7 +116,7 @@ class ProgramController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($program);
             $entityManager->flush();
-
+            $this->addFlash('success', 'La série a bien modifiée');
             return $this->redirectToRoute('program_index');
         }
 
@@ -143,6 +156,7 @@ class ProgramController extends AbstractController
             $comment->setEpisode($episode);
             $entityManager->persist($comment);
             $entityManager->flush();
+            $this->addFlash('success', 'Le commentaire a bien était créée');
 
             return $this->redirectToRoute('app_index');
         }

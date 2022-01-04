@@ -19,9 +19,12 @@
                     <div class="card-body border-1">
                         <h5 class="card-title">{{ program.title }}</h5>
                         <p class="card-text">Catégorie: {{ program.category.name }}</p>
-                        <p class="card-text">program.summary</p>
+                        <p class="card-text">{{ program.summary|u.truncate(25, '...') }}</p>
                         <a href="{{ path("program_show", {slug: program.slug}) }}">Voir la fiche</a>
                     </div>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('program_delete', {program: program.id}) }}" class="btn btn-primary">Supprimer</a>
+                    {% endif %}
                 </div>
             {% else %}
                 Aucune série trouvée.
